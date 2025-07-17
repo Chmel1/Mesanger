@@ -6,12 +6,15 @@ $password = 'Chmel1346856';
 $port = '5432';
 
 try{
-    $dsn = "pgsql:host = $host; port = $port; dbname = $dbname; user = $user; password = $password";
-    $pdo = new PDO($dsn);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    $pdo->exec("SET SESSION CHARACTERSISTICS AS TRANSACTION ISOLATION LEVEL READ COMMITTED");
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $pdo = new PDO($dsn, $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 
+    $pdo->exec("SET NAMES 'UTF8'");
+    // Можно задать уровень изоляции транзакций
+    $pdo->exec("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL READ COMMITTED");
 
 }catch(PDOException $e){
     error_log("Database connection failed: " . $e->getMessage());
