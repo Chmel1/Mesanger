@@ -1,36 +1,33 @@
-document.addEventListener('DOMContentLoaded', function(){
-    const contactsList = document.getElementById('contacts');
-    const messagesContainer = document.getElementById('messages');
-    const chatHeader = document.getElementById('chat-header');
-    const messageInput = document.getElementById('message-input');
-    const sendButton = document.getElementById('send-btn');
+document.addEventListener('DOMContentLoaded', ()=> {
+    const form = document.getElementById("chat-form")
+    const input = document.getElementById("message-input")
+    const messagesDiv = document.getElementById("messages")
 
-    async function loadMessages(recoverId, offset = 0){
-    try{
-        const response = await fetch(`/api/messages.php?receiver_id=${receiverId}&offset=${offset}`);
-    const data = await response.json();
-    if(data.success){
-        data.messages.forEach(msg=> {
-            renderMessage(msg);
-        });
+    const loadMessages = async() => {
+        const res = await fetch('/app/Controllers/fetch_messages.php')
+        const messages = await res.json();
 
-        if(data.has_more){
-            setupScrollListener();
-        }else{
-            showError(data.error)
-        }
+        messagesDiv.innerHTML = ''
+        messages.reverse().forEach(msg => {
+            const el = document.createElement('div')
+            el.className = 'mb-1'
+            el.innerHTML = `<strong>${msg.username}</strong>: ${msg.content} <small class="text-muted">[${msg.created_at}]</small>`;
+            messagesDiv.appendChild(el)
+        })
+        messagesDiv.scrollTop = messagesDiv.scrollHeight
     }
-    }catch(error){
-        console.error('Ошибка загрузки сообщения:', error);
-    }
-}
 
-function renderMessage(msg){
-    if(msg.message_type === 'image' && msg.attachments){
-        const img = document.createElement('img');
-        img.src = msg.attachments.url;
-        img.alt = 'Attached image';
-    }
-}
+    form.addEventListener('submit', async (e) =>{
+        e.preventDefault()
+        const content = input.input.value.trim()
+        if(content === '') return
+
+        await fetch('/app/Controllers/send_message.php',{
+            method: 'POST',
+            body: new URLSearchParams({content})
+        })
+
+        input.value = ''
+        loadMessages()
+    })
 })
-
