@@ -13,6 +13,7 @@
     
     <!-- Свои JS -->
     <script src="/assets/js/app.js" defer></script>
+    <script src="/assets/js/auth.js" defer></script>
 </head>
 <body class="bg-light">
     
@@ -45,5 +46,22 @@
         <?= !empty($content) ? $content : '' ?>
     </div>
     <!-- Модальное окно подтверждения выхода - Exit confirmation modal window -->
+     <div class="modal fade" id="lodoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutMpdalLabel">Подтверждение</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>         
+                </div>
+                <div class="modal-body">
+                    Вы дейтсвительно хотите выйти?
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Отмена</button>
+                    <button class="btn btn-danger" type="button" id="confirm-logout">Выйти</button>
+                </div>
+            </div>
+        </div>
+     </div>
 </body>
 </html>
